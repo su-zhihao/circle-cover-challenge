@@ -7,7 +7,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     circles.push(new Circle(width / 2, height / 2, 100, color(0, 0, 255, 100)));
 
-  // Add event listeners for the buttons and color picker
+    // Add event listeners for the buttons and color picker
     let addButton = select('#addCircle');
     addButton.mousePressed(addCircle);
     let removeButton = select('#removeCircle');
@@ -46,7 +46,7 @@ function removeCircle() {
 
 // Function to pick a color
 function pickColor() {
-    circleColor = color(this.value() || '#ff0000');
+    circleColor = color(this.value());
 }
 
 function mousePressed() {
@@ -56,9 +56,6 @@ function mousePressed() {
                 selectedCircle = circle;
                 break;
             }
-        }
-        if (!selectedCircle) {
-            creatingCircle = true;
         }
     }
 }
@@ -72,14 +69,6 @@ function mouseDragged() {
 }
 
 function mouseReleased() {
-    if (mouseButton === LEFT) {
-        if (creatingCircle) {
-            let r = dist(mouseX, mouseY, pmouseX, pmouseY);
-            circles.push(new Circle(pmouseX, pmouseY, r, color(random(255), random(255), random(255), 100)));
-            creatingCircle = false;
-        }
-        selectedCircle = null;
-    }
 }
 
 class Circle {

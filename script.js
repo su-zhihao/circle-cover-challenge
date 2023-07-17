@@ -5,7 +5,7 @@ let circleColor;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    circles.push(new Circle(width / 2, height / 2, 100, color(0, 0, 255, 100)));
+    circles.push(new Circle(width / 2, height / 2, 100, color(0, 0, 255, 100), false));
 
     // Add event listeners for the buttons and color picker
     let addButton = select('#addCircle');
@@ -21,10 +21,6 @@ function draw() {
     background(220);
     for (let circle of circles) {
         circle.display();
-    }
-    if (creatingCircle) {
-        let r = dist(mouseX, mouseY, pmouseX, pmouseY);
-        ellipse(pmouseX, pmouseY, r * 2);
     }
 }
 
@@ -72,11 +68,12 @@ function mouseReleased() {
 }
 
 class Circle {
-    constructor(x, y, r, c) {
+    constructor(x, y, r, c, movable = true) {
         this.x = x;
         this.y = y;
         this.r = r;
         this.c = c;
+        this.movable = movable;
     }
 
     contains(x, y) {
@@ -85,8 +82,10 @@ class Circle {
     }
 
     move(x, y) {
-        this.x = x;
-        this.y = y;
+        if (this.movable) {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     display() {

@@ -2,10 +2,13 @@ let circles = [];
 let selectedCircle = null;
 let creatingCircle = false;
 let circleColor;
+let smallCircleRadius, largeCircleRadius;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    circles.push(new Circle(width / 2, height / 2, 100, color(0, 0, 255, 100), false));
+    smallCircleRadius = select("#smallCircleRadius");
+    largeCircleRadius = select("#largeCircleRadius");
+    circles.push(new Circle(width / 2, height / 2, largeCircleRadius.value(), color(0, 0, 255, 100), false));
 
     // Add event listeners for the buttons and color picker
     let addButton = select('#addCircle');
@@ -15,6 +18,8 @@ function setup() {
     let colorPicker = select('#colorPicker');
     colorPicker.input(pickColor);
     circleColor = color(colorPicker.value() || '#ff0000');
+    smallCircleRadius.input(updateSmallCircleRadius);
+    largeCircleRadius.input(updateLargeCircleRadius);
 }
 
 function draw() {
@@ -30,7 +35,30 @@ function windowResized() {
 
 // Function to add a new circle
 function addCircle() {
-    circles.push(new Circle(random(width), random(height), 50, circleColor));
+    circles.push(new Circle(random(width), random(height), smallCircleRadius.value(), circleColor));
+}
+
+// Function to update the radius of the small circles
+function updateSmallCircleRadius() {
+    let radius = parseInt(this.value());
+    if (isNaN(radius) || radius < 10 || radius > 500) {
+        alert("invalid radius. Please enter a number between 10 and 500.");
+        return;
+    }
+    for (let i = 1; i < circles.length; i++) {
+        // skip the large circle at index 0
+        circles[i].setRadius(radius);
+    }
+}
+
+// Function to update the radius of the target circle
+function updateLargeCircleRadius() {
+    let radius = parseInt(this.value());
+    if (isNaN(radius) || radius < 10 || radius > 500) {
+        alert("invalid radius. Please enter a number between 10 and 500.");
+        return;
+    }
+    circles[0].setRadius(radius);
 }
 
 // Function to remove the last added circle
@@ -91,5 +119,9 @@ class Circle {
     display() {
         fill(this.c);
         ellipse(this.x, this.y, this.r * 2);
+    }
+
+    setRadius(r) {
+        this.r = r;
     }
 }
